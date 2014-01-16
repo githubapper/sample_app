@@ -1,4 +1,7 @@
 class User < ActiveRecord::Base
+  
+  has_many :microposts, dependent: :destroy # user A micropost relations
+
   before_save { self.email = email.downcase } #email转换成全小写形式,确保唯一性
   before_create :create_remember_token
   
@@ -24,6 +27,11 @@ class User < ActiveRecord::Base
 
   def User.admin?
    return User.admin
+  end
+
+  def feed
+   # This is preliminary. See "following users" for the full implementation
+   Micropost.where("user_id=?", id)
   end
 
   private
